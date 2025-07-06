@@ -1,27 +1,26 @@
-import { headers } from 'next/headers';
+// src/app/page.tsx
+"use client";
 
-import { appRouter } from '@/trpc/routers/_app';
-import { createTRPCContext } from '@/trpc/init';
+import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
 
-// This is a React Server Component, which can be async.
-const Page = async () => {
-  // We can use the `headers` function to get the request headers.
-  const heads = await headers();
-  const context = createTRPCContext({
-    headers: new Headers(heads),
+const Page = () => {
+  const invoke = trpc.invoke.useMutation({
+    onSuccess: () => {
+      toast.success("Background job invoked successfully!");
+    },
   });
 
-  // Create a caller for the tRPC API.
-  const caller = appRouter.createCaller(context);
-
-  // Call the procedure directly from the server.
-  const { aiResponse } = await caller.createAI({ text: 'from a Server Component' });
-
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold">tRPC Data from Server Component</h1>
-      <p className="mt-4 rounded-md bg-gray-100 p-4 font-mono">{aiResponse}</p>
-    </main>
+    <div className="p-4 max-w-7xl mx-auto">
+      <button
+        disabled={invoke.isPending}
+        onClick={() => invoke.mutate({ name: "John", text: "john@example.com" })}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {invoke.isPending ? "Sending..." : "Invoke Background Job"}
+      </button>
+    </div>
   );
 };
 
