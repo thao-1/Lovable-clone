@@ -22,7 +22,9 @@ const schemas = new EventSchemas().fromZod({
 
 // Create a client to send and receive events
 export const inngest = new Inngest({
-  id: "vibe",
+  id: "vibe", // Should match what you see in the dashboard
   schemas,
+  isDev: process.env.NODE_ENV === "development",
   eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
 });
