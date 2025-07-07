@@ -1,10 +1,9 @@
-// src/app/api/inngest/route.ts
 import { serve } from "inngest/next";
-import { inngest } from "../../../inngest/client";
-import { helloWorld } from "../../../inngest/functions";
+import { inngest } from "@/inngest/client";
+import { codeAssistant } from "../../../inngest/functions";
 
-// This will automatically handle all HTTP methods
+// Create a serve handler that exposes available functions
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [helloWorld],
+  functions: [codeAssistant],
 });
