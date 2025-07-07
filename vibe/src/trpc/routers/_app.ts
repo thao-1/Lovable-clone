@@ -17,12 +17,12 @@ export const appRouter = createTRPCRouter({
   invoke: publicProcedure
     .input(z.object({ 
       name: z.string(),
-      text: z.string() 
+      value: z.string() 
     }))
     .mutation(async ({ input }) => {
       await inngest.send({
         name: "test/hello.world",
-        data: { email: input.text, name: input.name },
+        data: { value: input.value, name: input.name },
       });
       return {
         ok: "success"

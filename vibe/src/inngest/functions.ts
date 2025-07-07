@@ -1,18 +1,20 @@
+import { openai, createAgent } from "@inngest/agent-kit";
 import { inngest } from "./client";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
-  async ({ event, step }) => {
-    // Imagine this is a download step
-    await step.sleep("wait-a-moment", "30s");
+  async ({ event }: { event: { data: { value: string } } }) => {
+    const summarizer = createAgent({
+      name: "summarizer",
+      system: "You are an expert summarizer. You summarize in 2 words.",
+      model: openai({ model: "gpt-4o" }),
+    });
 
-    // Imagine this is a transcript step
-    await step.sleep("wait-a-moment", "10s");
+    const output = await summarizer.run(
+      `Summarize the following text: ${event.data.value}`
+    );
 
-    // Imagine this is a summary
-    await step.sleep("wait-a-moment", "5s");
-    
-    return { message: `Hello ${event.data.name}!` };
+    return output;
   }
 );

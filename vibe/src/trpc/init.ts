@@ -1,7 +1,7 @@
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 
-export const createTRPCContext = (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     headers: opts.headers,
   };
